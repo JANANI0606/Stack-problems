@@ -1,0 +1,38 @@
+Problem Statement:
+Write a Java program to evaluate a postfix expression (also known as Reverse Polish Notation). A postfix expression is a mathematical expression where each operator follows all of its operands.
+You are given a string s consisting of single-digit operands (0–9) and operators: '+', '-', '*', '/'. Your task is to evaluate the expression and return the result as an integer.
+Program:
+import java.util.Stack;
+public class Main{
+    public static int isValid(String s){
+        Stack<Integer> stack=new Stack<>();
+        for(int i=0;i<s.length();i++){
+            char ch=s.charAt(i);
+            if(Character.isDigit(ch))
+            stack.push(ch-'0');
+            else{
+                int b=stack.pop();
+                int a=stack.pop();
+                int r=0;
+                switch(ch){
+                    case '+':
+                       r= a+b;
+                       break;
+                    case '-':
+                        r=a-b;
+                        break;
+                    case '*':
+                        r= a*b;
+                        break;
+                    case '/':
+                        r= a/b;
+                        break;            
+                }stack.push(r);
+            }
+        }return stack.pop();
+    }
+    public static void main(String args[]){
+        String s="56+34-*62/+";
+        System.out.println(isValid(s));
+    }
+}

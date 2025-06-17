@@ -1,0 +1,42 @@
+Problem Statement:
+Write a Java program to evaluate a prefix expression (also known as Polish Notation). In a prefix expression, operators precede their operands. For example, the expression + 2 3 evaluates to 5.
+You are given a string s consisting of single-digit operands (0–9) and operators: '+', '-', '*', '/',’^’. Your task is to evaluate the expression and return the result as an integer.
+
+Program:
+import java.util.Stack;
+public class Main{
+    public static int Prefix(String s){
+        Stack<Integer> stack=new Stack<>();
+        for(int i=s.length()-1;i>=0;i--){
+        char ch=s.charAt(i);
+        if(Character.isDigit(ch))
+        stack.push(ch-'0');
+        else{
+            int a=stack.pop();
+            int b=stack.pop();
+            int r=0;
+            switch(ch){
+                case '+':
+                    r=a+b;
+                    break;
+                case '-':
+                    r=a-b;
+                    break;
+                case '*':
+                    r=a*b;
+                    break;
+                case '/':
+                    r=a/b;
+                    break;
+                case '^':
+                    r=(int)Math.pow(a,b);
+                    break;            
+            }stack.push(r);
+        }
+    }return stack.pop();
+}
+public static void main(String args[]){
+    String s="-+*823/^64+31";
+    System.out.println(Prefix(s));
+}
+}

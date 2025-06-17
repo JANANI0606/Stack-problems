@@ -1,0 +1,68 @@
+Problem Statement:
+Write a Java program to evaluate an infix expression containing:
+•	single-digit integers (0–9)
+•	operators: +, -, *, /, ^
+•	parentheses: ( and )
+The expression follows standard arithmetic precedence and associativity rules:
+•	^ has the highest precedence and is right-associative
+•	*, / have medium precedence and are left-associative
+•	+, - have the lowest precedence and are left-associative
+
+Program:
+import java.util.Stack;
+public class Main {
+    public static int precedence(char ch) {
+        if (ch == '+' || ch == '-') return 1;
+        if (ch == '*' || ch == '/') return 2;
+        if (ch == '^') return 3;
+        return 0;
+    }
+    public static int calc(int a, int b, char op) {
+        switch (op) {
+            case '+': return a + b;
+            case '-': return a - b;
+            case '*': return a * b;
+            case '/': return a / b;
+            case '^': return (int) Math.pow(a, b);
+        }
+        return 0;
+    }
+    public static int infix(String s) {
+        Stack<Integer> v = new Stack<>();
+        Stack<Character> ops = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (Character.isDigit(ch)) {
+                v.push(ch - '0');
+            } else if (ch == '(') {
+                ops.push(ch);
+            } else if (ch == ')') {
+                while (ops.peek() != '(') {
+                    int b = v.pop();
+                    int a = v.pop();
+                    char op = ops.pop();
+                    v.push(calc(a, b, op));
+                }  ops.pop();
+            } else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^') {
+                while (!ops.isEmpty() && ops.peek() != '(' &&
+                      (precedence(ops.peek()) > precedence(ch) ||
+                      (precedence(ops.peek()) == precedence(ch) && ch != '^'))) {
+                    int b = v.pop();
+                    int a = v.pop();
+                    char op = ops.pop();
+                    v.push(calc(a, b, op));
+                }ops.push(ch);
+            }
+        }
+        while (!ops.isEmpty()) {
+            int b = v.pop();
+            int a = v.pop();
+            char op = ops.pop();
+            v.push(calc(a, b, op));
+        }return v.pop();
+    }
+    public static void main(String[] args) {
+        String s = "(8*2)+3-(6^4)/(3+1)";
+        System.out.println(infix(s));
+    }
+}
